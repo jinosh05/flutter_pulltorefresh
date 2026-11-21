@@ -4,14 +4,12 @@
  *   createTime:2018-05-14 17:39
  */
 
-import 'package:flutter/material.dart'
-    hide RefreshIndicator, RefreshIndicatorState;
-import 'package:flutter/widgets.dart';
-import '../../pull_to_refresh.dart';
-import '../internals/indicator_wrap.dart';
-import '../smart_refresher.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter/foundation.dart';
+import 'package:material_ui/material_ui.dart'
+    hide RefreshIndicator, RefreshIndicatorState;
+
+import '../../pull_to_refresh.dart';
 
 /// direction that icon should place to the text
 enum IconPosition { left, right, top, bottom }
@@ -59,11 +57,11 @@ class ClassicHeader extends RefreshIndicator {
 
   const ClassicHeader({
     Key? key,
-    RefreshStyle refreshStyle: RefreshStyle.Follow,
-    double height: 60.0,
-    Duration completeDuration: const Duration(milliseconds: 600),
+    RefreshStyle refreshStyle = RefreshStyle.Follow,
+    double height = 60.0,
+    Duration completeDuration = const Duration(milliseconds: 600),
     this.outerBuilder,
-    this.textStyle: const TextStyle(color: Colors.grey),
+    this.textStyle = const TextStyle(color: Colors.grey),
     this.releaseText,
     this.refreshingText,
     this.canTwoLevelIcon,
@@ -72,19 +70,19 @@ class ClassicHeader extends RefreshIndicator {
     this.completeText,
     this.failedText,
     this.idleText,
-    this.iconPos: IconPosition.left,
-    this.spacing: 15.0,
+    this.iconPos = IconPosition.left,
+    this.spacing = 15.0,
     this.refreshingIcon,
-    this.failedIcon: const Icon(Icons.error, color: Colors.grey),
-    this.completeIcon: const Icon(Icons.done, color: Colors.grey),
+    this.failedIcon = const Icon(Icons.error, color: Colors.grey),
+    this.completeIcon = const Icon(Icons.done, color: Colors.grey),
     this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
     this.releaseIcon = const Icon(Icons.refresh, color: Colors.grey),
   }) : super(
-          key: key,
-          refreshStyle: refreshStyle,
-          completeDuration: completeDuration,
-          height: height,
-        );
+         key: key,
+         refreshStyle: refreshStyle,
+         completeDuration: completeDuration,
+         height: height,
+       );
 
   @override
   State createState() {
@@ -97,50 +95,48 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
   Widget _buildText(mode) {
     RefreshString strings =
         RefreshLocalizations.of(context)?.currentLocalization ??
-            EnRefreshString();
+        EnRefreshString();
     return Text(
-        mode == RefreshStatus.canRefresh
-            ? widget.releaseText ?? strings.canRefreshText!
-            : mode == RefreshStatus.completed
-                ? widget.completeText ?? strings.refreshCompleteText!
-                : mode == RefreshStatus.failed
-                    ? widget.failedText ?? strings.refreshFailedText!
-                    : mode == RefreshStatus.refreshing
-                        ? widget.refreshingText ?? strings.refreshingText!
-                        : mode == RefreshStatus.idle
-                            ? widget.idleText ?? strings.idleRefreshText!
-                            : mode == RefreshStatus.canTwoLevel
-                                ? widget.canTwoLevelText ??
-                                    strings.canTwoLevelText!
-                                : "",
-        style: widget.textStyle);
+      mode == RefreshStatus.canRefresh
+          ? widget.releaseText ?? strings.canRefreshText!
+          : mode == RefreshStatus.completed
+          ? widget.completeText ?? strings.refreshCompleteText!
+          : mode == RefreshStatus.failed
+          ? widget.failedText ?? strings.refreshFailedText!
+          : mode == RefreshStatus.refreshing
+          ? widget.refreshingText ?? strings.refreshingText!
+          : mode == RefreshStatus.idle
+          ? widget.idleText ?? strings.idleRefreshText!
+          : mode == RefreshStatus.canTwoLevel
+          ? widget.canTwoLevelText ?? strings.canTwoLevelText!
+          : "",
+      style: widget.textStyle,
+    );
   }
 
   Widget _buildIcon(mode) {
     Widget? icon = mode == RefreshStatus.canRefresh
         ? widget.releaseIcon
         : mode == RefreshStatus.idle
-            ? widget.idleIcon
-            : mode == RefreshStatus.completed
-                ? widget.completeIcon
-                : mode == RefreshStatus.failed
-                    ? widget.failedIcon
-                    : mode == RefreshStatus.canTwoLevel
-                        ? widget.canTwoLevelIcon
-                        : mode == RefreshStatus.canTwoLevel
-                            ? widget.canTwoLevelIcon
-                            : mode == RefreshStatus.refreshing
-                                ? widget.refreshingIcon ??
-                                    SizedBox(
-                                      width: 25.0,
-                                      height: 25.0,
-                                      child: defaultTargetPlatform ==
-                                              TargetPlatform.iOS
-                                          ? const CupertinoActivityIndicator()
-                                          : const CircularProgressIndicator(
-                                              strokeWidth: 2.0),
-                                    )
-                                : widget.twoLevelView;
+        ? widget.idleIcon
+        : mode == RefreshStatus.completed
+        ? widget.completeIcon
+        : mode == RefreshStatus.failed
+        ? widget.failedIcon
+        : mode == RefreshStatus.canTwoLevel
+        ? widget.canTwoLevelIcon
+        : mode == RefreshStatus.canTwoLevel
+        ? widget.canTwoLevelIcon
+        : mode == RefreshStatus.refreshing
+        ? widget.refreshingIcon ??
+              SizedBox(
+                width: 25.0,
+                height: 25.0,
+                child: defaultTargetPlatform == TargetPlatform.iOS
+                    ? const CupertinoActivityIndicator()
+                    : const CircularProgressIndicator(strokeWidth: 2.0),
+              )
+        : widget.twoLevelView;
     return icon ?? Container();
   }
 
@@ -161,7 +157,8 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
       textDirection: widget.iconPos == IconPosition.left
           ? TextDirection.ltr
           : TextDirection.rtl,
-      direction: widget.iconPos == IconPosition.bottom ||
+      direction:
+          widget.iconPos == IconPosition.bottom ||
               widget.iconPos == IconPosition.top
           ? Axis.vertical
           : Axis.horizontal,
@@ -217,29 +214,24 @@ class ClassicFooter extends LoadIndicator {
   const ClassicFooter({
     Key? key,
     VoidCallback? onClick,
-    LoadStyle loadStyle: LoadStyle.ShowAlways,
-    double height: 60.0,
+    LoadStyle loadStyle = LoadStyle.ShowAlways,
+    double height = 60.0,
     this.outerBuilder,
-    this.textStyle: const TextStyle(color: Colors.grey),
+    this.textStyle = const TextStyle(color: Colors.grey),
     this.loadingText,
     this.noDataText,
     this.noMoreIcon,
     this.idleText,
     this.failedText,
     this.canLoadingText,
-    this.failedIcon: const Icon(Icons.error, color: Colors.grey),
-    this.iconPos: IconPosition.left,
-    this.spacing: 15.0,
-    this.completeDuration: const Duration(milliseconds: 300),
+    this.failedIcon = const Icon(Icons.error, color: Colors.grey),
+    this.iconPos = IconPosition.left,
+    this.spacing = 15.0,
+    this.completeDuration = const Duration(milliseconds: 300),
     this.loadingIcon,
-    this.canLoadingIcon: const Icon(Icons.autorenew, color: Colors.grey),
+    this.canLoadingIcon = const Icon(Icons.autorenew, color: Colors.grey),
     this.idleIcon = const Icon(Icons.arrow_upward, color: Colors.grey),
-  }) : super(
-          key: key,
-          loadStyle: loadStyle,
-          height: height,
-          onClick: onClick,
-        );
+  }) : super(key: key, loadStyle: loadStyle, height: height, onClick: onClick);
 
   @override
   State<StatefulWidget> createState() {
@@ -253,37 +245,38 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
   Widget _buildText(LoadStatus? mode) {
     RefreshString strings =
         RefreshLocalizations.of(context)?.currentLocalization ??
-            EnRefreshString();
+        EnRefreshString();
     return Text(
-        mode == LoadStatus.loading
-            ? widget.loadingText ?? strings.loadingText!
-            : LoadStatus.noMore == mode
-                ? widget.noDataText ?? strings.noMoreText!
-                : LoadStatus.failed == mode
-                    ? widget.failedText ?? strings.loadFailedText!
-                    : LoadStatus.canLoading == mode
-                        ? widget.canLoadingText ?? strings.canLoadingText!
-                        : widget.idleText ?? strings.idleLoadingText!,
-        style: widget.textStyle);
+      mode == LoadStatus.loading
+          ? widget.loadingText ?? strings.loadingText!
+          : LoadStatus.noMore == mode
+          ? widget.noDataText ?? strings.noMoreText!
+          : LoadStatus.failed == mode
+          ? widget.failedText ?? strings.loadFailedText!
+          : LoadStatus.canLoading == mode
+          ? widget.canLoadingText ?? strings.canLoadingText!
+          : widget.idleText ?? strings.idleLoadingText!,
+      style: widget.textStyle,
+    );
   }
 
   Widget _buildIcon(LoadStatus? mode) {
     Widget? icon = mode == LoadStatus.loading
         ? widget.loadingIcon ??
-            SizedBox(
-              width: 25.0,
-              height: 25.0,
-              child: defaultTargetPlatform == TargetPlatform.iOS
-                  ? const CupertinoActivityIndicator()
-                  : const CircularProgressIndicator(strokeWidth: 2.0),
-            )
+              SizedBox(
+                width: 25.0,
+                height: 25.0,
+                child: defaultTargetPlatform == TargetPlatform.iOS
+                    ? const CupertinoActivityIndicator()
+                    : const CircularProgressIndicator(strokeWidth: 2.0),
+              )
         : mode == LoadStatus.noMore
-            ? widget.noMoreIcon
-            : mode == LoadStatus.failed
-                ? widget.failedIcon
-                : mode == LoadStatus.canLoading
-                    ? widget.canLoadingIcon
-                    : widget.idleIcon;
+        ? widget.noMoreIcon
+        : mode == LoadStatus.failed
+        ? widget.failedIcon
+        : mode == LoadStatus.canLoading
+        ? widget.canLoadingIcon
+        : widget.idleIcon;
     return icon ?? Container();
   }
 
@@ -304,7 +297,8 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
       textDirection: widget.iconPos == IconPosition.left
           ? TextDirection.ltr
           : TextDirection.rtl,
-      direction: widget.iconPos == IconPosition.bottom ||
+      direction:
+          widget.iconPos == IconPosition.bottom ||
               widget.iconPos == IconPosition.top
           ? Axis.vertical
           : Axis.horizontal,
@@ -319,9 +313,7 @@ class _ClassicFooterState extends LoadIndicatorState<ClassicFooter> {
         ? widget.outerBuilder!(container)
         : Container(
             height: widget.height,
-            child: Center(
-              child: container,
-            ),
+            child: Center(child: container),
           );
   }
 }

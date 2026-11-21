@@ -3,25 +3,26 @@
  * Email: peng8350@gmail.com
  * Time:  2019-06-26 13:17
 */
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 /// enable header link other header place outside the viewport
 class LinkHeader extends RefreshIndicator {
   /// the key that widget outside viewport indicator
   final Key linkKey;
 
-  const LinkHeader(
-      {Key? key,
-      required this.linkKey,
-      double height: 0.0,
-      RefreshStyle? refreshStyle,
-      Duration completeDuration: const Duration(milliseconds: 200)})
-      : super(
-            height: height,
-            refreshStyle: refreshStyle,
-            completeDuration: completeDuration,
-            key: key);
+  const LinkHeader({
+    Key? key,
+    required this.linkKey,
+    double height = 0.0,
+    RefreshStyle? refreshStyle,
+    Duration completeDuration = const Duration(milliseconds: 200),
+  }) : super(
+         height: height,
+         refreshStyle: refreshStyle,
+         completeDuration: completeDuration,
+         key: key,
+       );
 
   @override
   State<StatefulWidget> createState() {
@@ -78,12 +79,12 @@ class LinkFooter extends LoadIndicator {
   /// the key that widget outside viewport indicator
   final Key linkKey;
 
-  const LinkFooter(
-      {Key? key,
-      required this.linkKey,
-      double height: 0.0,
-      LoadStyle loadStyle: LoadStyle.ShowAlways})
-      : super(height: height, loadStyle: loadStyle, key: key);
+  const LinkFooter({
+    Key? key,
+    required this.linkKey,
+    double height = 0.0,
+    LoadStyle loadStyle = LoadStyle.ShowAlways,
+  }) : super(height: height, loadStyle: loadStyle, key: key);
 
   @override
   State<StatefulWidget> createState() {

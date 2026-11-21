@@ -5,14 +5,12 @@
  */
 
 import 'dart:async';
-import 'package:flutter/material.dart'
-    hide RefreshIndicatorState, RefreshIndicator;
-import 'package:flutter/widgets.dart';
+
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter/foundation.dart';
+import 'package:material_ui/material_ui.dart'
+    hide RefreshIndicatorState, RefreshIndicator;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import '../internals/indicator_wrap.dart';
-import 'package:flutter/cupertino.dart';
-import '../smart_refresher.dart';
 
 /// QQ ios refresh  header effect
 class WaterDropHeader extends RefreshIndicator {
@@ -35,19 +33,16 @@ class WaterDropHeader extends RefreshIndicator {
     Key? key,
     this.refresh,
     this.complete,
-    Duration completeDuration: const Duration(milliseconds: 600),
+    Duration completeDuration = const Duration(milliseconds: 600),
     this.failed,
-    this.waterDropColor: Colors.grey,
-    this.idleIcon: const Icon(
-      Icons.autorenew,
-      size: 15,
-      color: Colors.white,
-    ),
+    this.waterDropColor = Colors.grey,
+    this.idleIcon = const Icon(Icons.autorenew, size: 15, color: Colors.white),
   }) : super(
-            key: key,
-            height: 60.0,
-            completeDuration: completeDuration,
-            refreshStyle: RefreshStyle.UnFollow);
+         key: key,
+         height: 60.0,
+         completeDuration: completeDuration,
+         refreshStyle: RefreshStyle.UnFollow,
+       );
 
   @override
   State<StatefulWidget> createState() {
@@ -82,12 +77,16 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
   void initState() {
     // TODO: implement initState
     _dismissCtl = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 400), value: 1.0);
+      vsync: this,
+      duration: Duration(milliseconds: 400),
+      value: 1.0,
+    );
     _animationController = AnimationController(
-        vsync: this,
-        lowerBound: 0.0,
-        upperBound: 50.0,
-        duration: Duration(milliseconds: 400));
+      vsync: this,
+      lowerBound: 0.0,
+      upperBound: 50.0,
+      duration: Duration(milliseconds: 400),
+    );
     super.initState();
   }
 
@@ -102,7 +101,8 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
     // TODO: implement buildContent
     Widget? child;
     if (mode == RefreshStatus.refreshing) {
-      child = widget.refresh ??
+      child =
+          widget.refresh ??
           SizedBox(
             width: 25.0,
             height: 25.0,
@@ -111,87 +111,73 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
                 : const CircularProgressIndicator(strokeWidth: 2.0),
           );
     } else if (mode == RefreshStatus.completed) {
-      child = widget.complete ??
+      child =
+          widget.complete ??
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const Icon(
-                Icons.done,
-                color: Colors.grey,
-              ),
-              Container(
-                width: 15.0,
-              ),
+              const Icon(Icons.done, color: Colors.grey),
+              Container(width: 15.0),
               Text(
                 (RefreshLocalizations.of(context)?.currentLocalization ??
                         EnRefreshString())
                     .refreshCompleteText!,
                 style: TextStyle(color: Colors.grey),
-              )
+              ),
             ],
           );
     } else if (mode == RefreshStatus.failed) {
-      child = widget.failed ??
+      child =
+          widget.failed ??
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const Icon(
-                Icons.close,
-                color: Colors.grey,
-              ),
-              Container(
-                width: 15.0,
-              ),
+              const Icon(Icons.close, color: Colors.grey),
+              Container(width: 15.0),
               Text(
-                  (RefreshLocalizations.of(context)?.currentLocalization ??
-                          EnRefreshString())
-                      .refreshFailedText!,
-                  style: TextStyle(color: Colors.grey))
+                (RefreshLocalizations.of(context)?.currentLocalization ??
+                        EnRefreshString())
+                    .refreshFailedText!,
+                style: TextStyle(color: Colors.grey),
+              ),
             ],
           );
     } else if (mode == RefreshStatus.idle || mode == RefreshStatus.canRefresh) {
       return FadeTransition(
-          child: Container(
-            child: Stack(
-              children: <Widget>[
-                RotatedBox(
-                  child: CustomPaint(
-                    child: Container(
-                      height: 60.0,
-                    ),
-                    painter: _QqPainter(
-                      color: widget.waterDropColor,
-                      listener: _animationController,
-                    ),
+        child: Container(
+          child: Stack(
+            children: <Widget>[
+              RotatedBox(
+                child: CustomPaint(
+                  child: Container(height: 60.0),
+                  painter: _QqPainter(
+                    color: widget.waterDropColor,
+                    listener: _animationController,
                   ),
-                  quarterTurns:
-                      Scrollable.of(context)!.axisDirection == AxisDirection.up
-                          ? 10
-                          : 0,
                 ),
-                Container(
-                  alignment:
-                      Scrollable.of(context)!.axisDirection == AxisDirection.up
-                          ? Alignment.bottomCenter
-                          : Alignment.topCenter,
-                  margin:
-                      Scrollable.of(context)!.axisDirection == AxisDirection.up
-                          ? EdgeInsets.only(bottom: 12.0)
-                          : EdgeInsets.only(top: 12.0),
-                  child: widget.idleIcon,
-                )
-              ],
-            ),
-            height: 60.0,
+                quarterTurns:
+                    Scrollable.of(context).axisDirection == AxisDirection.up
+                    ? 10
+                    : 0,
+              ),
+              Container(
+                alignment:
+                    Scrollable.of(context).axisDirection == AxisDirection.up
+                    ? Alignment.bottomCenter
+                    : Alignment.topCenter,
+                margin: Scrollable.of(context).axisDirection == AxisDirection.up
+                    ? EdgeInsets.only(bottom: 12.0)
+                    : EdgeInsets.only(top: 12.0),
+                child: widget.idleIcon,
+              ),
+            ],
           ),
-          opacity: _dismissCtl);
+          height: 60.0,
+        ),
+        opacity: _dismissCtl,
+      );
     }
-    return Container(
-      height: 60.0,
-      child: Center(
-        child: child,
-      ),
-    );
+    return Container(height: 60.0, child: Center(child: child));
   }
 
   @override
@@ -237,33 +223,42 @@ class _QqPainter extends CustomPainter {
 
     //drawleft
     path.cubicTo(
-        middleW - circleSize,
-        originH,
-        middleW - circleSize + value * scaleRatio,
-        originH + offset / 5,
-        middleW - circleSize + value * scaleRatio * 2,
-        originH + offset);
+      middleW - circleSize,
+      originH,
+      middleW - circleSize + value * scaleRatio,
+      originH + offset / 5,
+      middleW - circleSize + value * scaleRatio * 2,
+      originH + offset,
+    );
     path.lineTo(
-        middleW + circleSize - value * scaleRatio * 2, originH + offset);
+      middleW + circleSize - value * scaleRatio * 2,
+      originH + offset,
+    );
     //draw right
     path.cubicTo(
-        middleW + circleSize - value * scaleRatio * 2,
-        originH + offset,
-        middleW + circleSize - value * scaleRatio,
-        originH + offset / 5,
-        middleW + circleSize,
-        originH);
+      middleW + circleSize - value * scaleRatio * 2,
+      originH + offset,
+      middleW + circleSize - value * scaleRatio,
+      originH + offset / 5,
+      middleW + circleSize,
+      originH,
+    );
     //draw upper circle
     path.moveTo(middleW - circleSize, originH);
-    path.arcToPoint(Offset(middleW + circleSize, originH),
-        radius: Radius.circular(circleSize));
+    path.arcToPoint(
+      Offset(middleW + circleSize, originH),
+      radius: Radius.circular(circleSize),
+    );
 
     //draw lowwer circle
     path.moveTo(
-        middleW + circleSize - value * scaleRatio * 2, originH + offset);
+      middleW + circleSize - value * scaleRatio * 2,
+      originH + offset,
+    );
     path.arcToPoint(
-        Offset(middleW - circleSize + value * scaleRatio * 2, originH + offset),
-        radius: Radius.circular(value * scaleRatio));
+      Offset(middleW - circleSize + value * scaleRatio * 2, originH + offset),
+      radius: Radius.circular(value * scaleRatio),
+    );
     path.close();
     canvas.drawPath(path, painter);
   }

@@ -4,11 +4,10 @@
  * Time:  2019-08-29 09:41
  */
 
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
-import 'classic_indicator.dart';
+import 'package:material_ui/material_ui.dart';
+
 import '../smart_refresher.dart';
+import 'classic_indicator.dart';
 
 enum TwoLevelDisplayAlignment { fromTop, fromCenter, fromBottom }
 
@@ -87,28 +86,29 @@ class TwoLevelHeader extends StatelessWidget {
   final double height;
   final Duration completeDuration;
 
-  const TwoLevelHeader(
-      {Key? key,
-      this.height: 80.0,
-      this.decoration,
-      this.displayAlignment: TwoLevelDisplayAlignment.fromBottom,
-      this.completeDuration: const Duration(milliseconds: 600),
-      this.textStyle: const TextStyle(color: const Color(0xff555555)),
-      this.releaseText,
-      this.refreshingText,
-      this.canTwoLevelIcon,
-      this.canTwoLevelText,
-      this.completeText,
-      this.failedText,
-      this.idleText,
-      this.iconPos: IconPosition.left,
-      this.spacing: 15.0,
-      this.refreshingIcon,
-      this.failedIcon: const Icon(Icons.error, color: Colors.grey),
-      this.completeIcon: const Icon(Icons.done, color: Colors.grey),
-      this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
-      this.releaseIcon = const Icon(Icons.refresh, color: Colors.grey),
-      this.twoLevelWidget});
+  const TwoLevelHeader({
+    Key? key,
+    this.height = 80.0,
+    this.decoration,
+    this.displayAlignment = TwoLevelDisplayAlignment.fromBottom,
+    this.completeDuration = const Duration(milliseconds: 600),
+    this.textStyle = const TextStyle(color: const Color(0xff555555)),
+    this.releaseText,
+    this.refreshingText,
+    this.canTwoLevelIcon,
+    this.canTwoLevelText,
+    this.completeText,
+    this.failedText,
+    this.idleText,
+    this.iconPos = IconPosition.left,
+    this.spacing = 15.0,
+    this.refreshingIcon,
+    this.failedIcon = const Icon(Icons.error, color: Colors.grey),
+    this.completeIcon = const Icon(Icons.done, color: Colors.grey),
+    this.idleIcon = const Icon(Icons.arrow_downward, color: Colors.grey),
+    this.releaseIcon = const Icon(Icons.refresh, color: Colors.grey),
+    this.twoLevelWidget,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -135,9 +135,11 @@ class TwoLevelHeader extends StatelessWidget {
       textStyle: textStyle,
       iconPos: iconPos,
       outerBuilder: (child) {
-        final RefreshStatus? mode =
-            SmartRefresher.of(context)!.controller.headerStatus;
-        final bool isTwoLevel = (mode == RefreshStatus.twoLevelClosing ||
+        final RefreshStatus? mode = SmartRefresher.of(context)!
+            .controller
+            .headerStatus;
+        final bool isTwoLevel =
+            (mode == RefreshStatus.twoLevelClosing ||
             mode == RefreshStatus.twoLeveling ||
             mode == RefreshStatus.twoLevelOpening);
         if (displayAlignment == TwoLevelDisplayAlignment.fromBottom) {
@@ -149,10 +151,7 @@ class TwoLevelHeader extends StatelessWidget {
             alignment: isTwoLevel ? null : Alignment.bottomCenter,
             child: isTwoLevel
                 ? twoLevelWidget
-                : Padding(
-                    child: child,
-                    padding: EdgeInsets.only(bottom: 15),
-                  ),
+                : Padding(child: child, padding: EdgeInsets.only(bottom: 15)),
           );
         } else {
           return Container(
